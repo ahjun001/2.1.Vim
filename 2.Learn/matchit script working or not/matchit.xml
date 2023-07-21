@@ -1,0 +1,9 @@
+<xsl:template match="Client">
+  <Client>
+    <xsl:variable name="gender" select="substring(IdNumber, 10, 1)" />
+    <xsl:choose>
+       <xsl:when test="number($gender) mod 2 = 1">Male</xsl:when>
+       <xsl:otherwise>Female</xsl:otherwise>
+    </xsl:choose>
+  </Client>
+</xsl:template>

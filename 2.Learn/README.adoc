@@ -1,0 +1,508 @@
+= VIM cheat-sheet
+// writing comments after settings is not caught by the linter, but it does not work either ... // don't do it
+ifndef::env-github[:icons: font]
+ifdef::env-github[]
+:status:
+:outfilesuffix: .adoc
+:caution-caption: :fire:
+:important-caption: :exclamation:
+:note-caption: :paperclip:
+:tip-caption: :bulb:
+:warning-caption: :warning:
+endif::[]
+//:repoducible:
+//:source-highlighter: coderay
+//:listing-caption: Listing
+//:pdf-page-size: A4
+//:docinfo: private-head
+//:idprefix:
+//:idseparator: -
+//:sectanchors:
+//:sectlinks:
+//:quick-uri: http://asciidoctor.org/docs/asciidoc-syntax-quick-reference/
+:toc:   // gets a ToC after the title
+:toc-title: Contents
+:toclevels: 3
+:sectnums: // gets ToC sections to be numbered
+:sectnumlevels: 6
+
+:toc:
+
+IMPORTANT: do not forget
+
+== VIM user manual (as it comes with :h users-manual)
+
+=== About the manuals -- user_01.txt
+
+Reviewing the tutor every once in a while might be a good idea.
+
+Two manuals: (i) A User manual, with task oriented explanations, (ii) A reference manual
+
+==== Jumping around
+
+ :bp  /  :bn   (or CTRL-O / CTRL-I when just changed buffers)  to go to the previous / next buffer
+
+ <TABS> or Ctrl-I goes to next jump, Ctrl-O    both could be in a different buffer
+
+ :ju(mps)  will display a jump list, can be navigated with the mouse in codevim
+    :<n>Ctrl-O / <n>Ctrl-I jumps <n> times in VIM
+    :cle(arjumps)
+
+==== Run commands
+
+ :e $MYVIMRC to edit the correct vimrc file.
+
+In Linux Mint,  ~/.vim/vimrc contains one line:    'source ~/Documents/GitHub/cheat-sheet_VIM/vimrc'
+
+ :scriptnames  " to see what files & plugins are loaded at startup
+
+ :new
+ :put=execute('scriptnames')  " will write the list in a new file
+
+VSCode will check in Settings (Ctrl+comma)  Vim> Vimrc:Path for vimrc file
+
+
+=== The first steps in Vim -- usr_02.txt
+
+==== Getting out
+
+Normal mode: ZZ is equivalent to :wq   when in help, windows ZZ also closes help without exiting the program.
+
+WARNING: If not in the help window, if all buffers are saved, vim will quit
+
+==== Finding help
+
+ :h  display help main file, shows a list of modes and their command prefixes (prepend).
+  commonly used ones are:
+        Normal mode: no prefix
+        Visual mode: enter with v, V, or Ctrl-v, prefix: v_    ex.: v_U capitalize, v_u lowercase, v_~ switch
+        Insert mode: enter with a,A, i,I o or O, prefix: i_    ex.: :h i_CTRL-[ i_<Esc>
+        Options, prefix:'     ex.: :h 'ai   shows set autoindent help
+        Regex, prefix: /    :h /$   shows <EOL> help
+        Command-line editing: : prepend help with c_
+                 :help c_command_name  " how to edit in the lower-screen command line
+                 :help c_<Del>
+        Command argument: prepend help with -
+                 :help -command_name
+                 :help -r    " list swap files that can be recovered
+
+TIP: :vert h toc     is often a good way to start help in a 'landscape' screen
+
+TIP: Searching for terms in the toc before trying :helpgrep is a good idea
+
+ :helpgrep <subject>
+ :cwindow  " to browse results
+ :cnext / cprev " to jump to next / previous result
+
+command line completion with <TAB> is especially useful for :help
+
+ :set nu rnu    is useful while reading help or manual
+
+ :h help-summary     is useful
+
+Key combinations.  They usually start with a single letter indicating the mode for which they can be used.
+    e.g.:    :help i_CTRL-X
+  takes you to the family of CTRL-X commands for insert mode which can be used to auto-complete different things.  Note, that certain keys will always be written the same, e.g. Control will always be CTRL or ctrl.
+
+ For normal mode commands there is no prefix and the topic is available at
+    :h CTRL-<Letter>    E.g.  > :help CTRL-W    shows the list of windows sizing & control commands
+
+  In contrast >
+    :help c_CTRL-R      will describe what the CTRL-R does when entering content of registers in commands in the Command line
+
+    :help v_CTRL-A      talks about incrementing numbers in visual mode
+
+    :help g_CTRL-A      talks about the "g<C-A>" command (e.g. you have to press "g" then
+ <CTRL-A>).  Here the "g" stands for the normal command "g" which always expects a second key before doing something similar to the commands starting with "z".
+
+
+=== Moving around -- usr_03.txt
+
+==== Search
+
+Searching for text \< and \> are special markers that match beginning and end of a word.
+
+ /\<word\>   search for the whole word only
+
+ :set hls  highlights searched char string, :noh temporarilly removes highlight
+
+ :set ic  highlights incremental search
+
+ :set list / :set nolist turns invisible characters on / off
+
+==== Marks
+ 
+ ma to make a mark,
+ 'a ('<SPACE>a with US-int'l keyboard) to move so that cursor is as col.1 of this mark's line.
+ `a to place cursor right on the mark.
+
+ :marks    List all the current marks
+
+ :marks {arg} List marks mentionned in {arg}.  For example :marks a8
+
+:delm[arks] {marks}   Delete the specified marks.  For examples :delm ab c    deletes marks a, b, and c
+
+Special marks include:
+
+        '       The cursor position before doing a jump
+        "       The cursor position when last editing the file
+        [       Start of the last change
+        ]       End of the last change
+
+=== Making small changes -- usr_04.txt
+
+        x  stands for  dl  (delete character under the cursor)
+        X  stands for  dh  (delete character left of the cursor)
+        D  stands for  d$  (delete to end of the line)
+        C  stands for  c$  (change to end of the line)
+        s  stands for  cl  (change one character)
+        S  stands for  cc  (change a whole line)
+
+
+ d`m  deletes between current position and mark m
+
+ di' / da' deletes inside / around a '' quoted string
+ di" / da" deletes inside / around a "" quoted string
+ di` / da` deletes inside / around a `` quoted string
+
+The operators, movement commands and text objects give you the possibility to
+make lots of combinations.  Now that you know how they work, you can use N
+operators with M movement commands to make N * M commands!
+
+For example, there are many other ways to delete pieces of text.  Here are a
+few common ones:
+
+ x       delete character under the cursor (short for "dl")
+ X       delete character before the cursor (short for "dh")
+ D       delete from cursor to end of line (short for "d$")
+ dw      delete from cursor to next start of word
+ db      delete from cursor to previous start of word
+ diw     delete word under the cursor (excluding white space)
+ daw     delete word under the cursor (including white space)
+ dG      delete until the end of the file
+ dgg     delete until the start of the file
+ 
+ Operators:
+ If you use "c" instead of "d" they become change commands.
+ With "y" you yank the text.
+ ~       swap case (only if 'tildeop' is set), ex: ~[Space with US Int'l keyboard]w   swap word's case
+ g~      swap case
+ gu      make lowercase
+ gU      make uppercase
+ g?      ROT13 encoding
+ >       shift right
+ <       shift left
+ gq      text formatting
+ gw      text formatting with no cursor movement
+ =       filter through 'equalprg' or C-indenting if empty
+
+
+
+
+
+
+ v motion :w FILENAME   saves the Visually selected lines in file FILENAME 
+
+After listing buffers with  :ls  close buffer n   with :bdn, close all with :%bd
+
+ :reg(isters)    or    :di(splay)  shows registers
+
+
+                                                linewise characterwise
+The operator either affects whole lines, or the characters between the start and end position.
+
+ ["x]dd                  Delete [count] lines [into register x] linewise.
+
+
+ ["x]D                  Delete the characters under the cursor until the end
+                        of the line and [count]-1 more lines [into register
+                        x]; synonym for "d$".
+
+ ["x]c{motion}          Delete {motion} text [into register x] and start insert.  
+
+ ["x]cc                 Delete [count] lines [into register x] and start insert.
+                        If 'autoindent' is on (:set ai), preserve the indent of the first line.
+
+
+ ["x]C                  Delete from the cursor position to the end of the
+                        line and [count]-1 more lines [into register x], and
+                        start insert.  Synonym for c$.
+
+
+ ["x]s                  Delete [count] characters [into register x]
+                        and start insert (s stands for Substitute).
+                        Synonym for "cl".
+
+
+ ["x]S                  Delete [count] lines [into register x] and start insert.
+                        Synonym for "cc".
+
+
+ In replace mode -- started with R --, Ctrl-y will copy chars from precedent line, <BS> or Ctrl-h will undo the replace, putting back chars from initial text.
+
+
+ :h CTRL-W to list windows controls, including:
+  ctrl-+ / ctrl - & ctrl > / ctrl <    to increase / decrase window's height / width
+
+ Ctrl-^ or Ctrl-6 switches between % (current) and # (alternate) files.
+
+==== Both VIM and mscodevim
+
+ Moving forward / backward just before a char 'c' on a line: tc / Tc
+ ';' ',' repeats in the same / opposite direction
+
+ "for a long text between parentheses", from anywhere in the middle, T" Ctrl-v ,    or    t" Ctrl-v ,    will select the inside of ""
+ A better way:  Ctrl-v-i "  will do the same.   Ctrl-v a "  will select the "" as well.
+ 
+ Normal mode: db & dB, when cursor is as beginning of a word, will delete the precedent word along with the space in between.
+
+ Whith cursor on a specific line, scrolling file so that line shows 1rst on top is best done with zt
+ Alternatively zz to have file scroll so that line shows in the middle, zb to have it at bottom
+ H M L position the cursor on screen without scrolling the file.
+ Alternatively :set nu rnu    and then n CTRL-E[nd] / n CTRL-Y[esterday] will scroll the file by n lines down / up
+
+ */ # will match whole word the cursor is on forward / backward
+ g* / g# will also match words containing the word the cursor is on, g.e.: when on 'the', g* will match then there, therefore and so on.
+
+ X stands for dh (delete character left of the cursor)
+
+ In visual mode, having started in the middle of what should be selected, 'o' brings back the cursor to the other end of the selection for further selection.
+ 'O' moves to the other corner of the same line.
+
+ ~ is an operator if :set top  or  :set tildeop is set in VIM, then works as such for text-objects in codevim.
+ ~ inverse upper & lower case
+
+ u to undo one change, U to undo all the changes on a line
+
+ n next occurence same direction, N next occurence opposite direction, repeat N to keep in this opposite direction
+
+ r replaces one character, R replaces until <ESC> (Replace mode)
+
+ i_CTRL-T / i_CTRL-D adds / deletes  one shiftwidth of indent in the current line
+
+ 'current selection' -- "* reg --, and 'real clipboard' -- "+ reg -- in X-Windows:
+-  Select two words in Visual mode.
+-  Use the Edit/Copy menu to get these words onto the clipboard.
+-  Select one other word in Visual mode.
+-  Use the Edit/Paste menu item.  What will happen is that the single selected
+   word is replaced with the two words from the clipboard.
+-  Move the mouse pointer somewhere else and click the middle button.  You
+   will see that the word you just overwrote with the clipboard is inserted
+   here.
+
+=== Set your settings usr_05.txt
+
+=== Using syntax highlighting usr_06.txt
+
+=== Editing more than one file usr_07.txt
+
+==== Using registers
+
+ "ry   to yank selection into r register
+ "rp   to put r register contents 
+
+==== Appending to a file
+
+ :w >> logfile    will add buffer to the file
+
+
+=== Splitting windows usr_08.txt
+
+ :sp   splits horizontally
+ :sp filename    splits horizontally and opens filename in the new window
+ :vs filename    vertical split and opens filename in new window
+ :vert h topic   vertical split and opens help on topic
+
+==== Moving between windows
+
+        CTRL-W h        move to the window on the left
+        CTRL-W j        move to the window below
+        CTRL-W k        move to the window above
+        CTRL-W l        move to the window on the right
+
+==== Moving windows
+
+        CTRL-W SHIFT-K  moves the window to the top part of the screen, regardless it was vertically split or not
+        CTRL-W H        move window to the far left
+        CTRL-W J        move window to the bottom
+        CTRL-W L        move window to the far right
+
+==== Opening a window for each arguments
+
+ $ vim -o *.txt    opens all in vertically split screen
+ $ vim -O *.txt    opens all in horizontally split screen
+
+==== Diffing in Vim
+
+Another way to start in diff mode can be done from inside Vim.  Edit the
+"main.c" file, then make a split and show the differences:
+
+        :edit main.c
+        :vertical diffsplit main.c~
+
+The ":vertical" command is used to make the window split vertically.  If you
+omit this, you will get a horizontal split.
+
+==== Jumping to changes
+
+ ]c next change
+[c the other way
+
+ dp "difff put" removes a difference by putting the text under the cursor of the current window in the other window
+ do "difff obtain" removes a difference by putting the change under the cursor from the other window into the current one.
+
+==== Tab pages
+
+ :tabe[dit] filename    edit 'filename' in a new tab and switch
+
+ :q closes the current tab
+
+ :tabN[ext] gt :tabp[revious] gT :tabf[irst] :tabl[ast] :tabnew :tabc[lose]     all perform the eponym action
+
+:tabo[nly]    close all tab pages except the current one
+
+ :tab split    makes a new tab page editing current buffer
+
+=== Using the GUI usr_09.txt
+
+==== The clibboard
+
+In X-Windows, highlighting text and middle-clicking in a different window works.  This copy & paste without using the keyboard.
+
+"* register is for the current selection (does not show in Clipit)
+"+ register is for the keyboard (shows in Clipit)
+
+Frequently used commands are in described as accelerators under gVim's Edit menu
+
+=== Making big changes usr_10.txt
+
+== Lists
+
+look at various.txt line 580 for list of commands to use
+
+
+=== Useful commands
+
+ :bro[wse] filter /\.adoc/ ol[dfiles]
+
+
+== From Quick Reference: see quickref.txt  :help quickref
+
+
+=== matchit-configure
+
+Configuration is local to the buffer (buffers could be of different languages, so different matching pairs).  So use :let instead of :set
+
+== Get specific help
+
+
+=== Normal mode command
+
+== VIM
+
+== Todo
+
+check: https://github.com/yulonghu/vim-sensible
+
+In what situations use:
+CTRL-T : jump to [count] older entry in the tag stack (default 1).
+CTRL-O
+g-<Right mouse>
+CTRL-<Right mouse>
+CTRL-;  " tapé par inadvertance sur un tag
+
+check last line
+" vim:sts=2:sw=2:et:
+:set softtabstops=2
+:set shiftwidth=2
+:set expandtab
+
+
+== Compilation in Ubuntu
+
+
+=== Creating original directory from a fork on Github
+
+ cd ~/.vim
+ git clone https://github.com/ahjun001-forks/vim.git
+ mv vim src
+
+
+=== Sync the github forked directory with its original /vim/vim.git
+
+ git remote -v
+    origin      https://github.com/ahjun001-forks/vim.git (fetch)
+    origin      https://github.com/ahjun001-forks/vim.git (push)
+    upstream    https://github.com/ahjun001-forks/vim.git (fetch)
+    upstream    https://github.com/ahjun001-forks/vim.git (push)
+git fetch upstream
+git checkout master
+git merge upstream/master
+(git push)
+
+=== Sync the local repository and compile
+
+ cd .vim/src
+ git pull
+ make clean      # remove what make built
+ make distclean  # includes ./configure 
+ ./configure --enable-gui=gtk3
+ make
+ make test
+ sudo make install
+
+=== Making VIM the default editor on Linux
+
+ sudo update-alternatives --install /usr/bin/editor editor /usr/local/bin/vim 100
+
+== Managing packages (many plugins in a directory) and plugins
+
+ https://vimhelp.org/repeat.txt.html#packages
+ https://vi.stackexchange.com/questions/9522/what-is-the-vim8-package-feature-and-how-should-i-use-it
+ https://medium.com/@paulodiovani/installing-vim-8-plugins-with-the-native-pack-system-39b71c351fea
+
+=== Using nvim in VSCode
+
+ download nvim.appimage from https://github.com/neovim/neovim/releases
+ chmod +x nvim.appimage
+ mv nvim.appimage nv
+ mv nv /usr/local/bin/
+ ln -T ~/.vim/vimrc ~/.config/nvim/init.vim
+
+ open nv(im) and check that :echo $MYVIMRC points to the right file
+
+=== compiling a specific version of nvim
+ current installed is NVIM v0.5.0-dev+965-gd0668b36a
+ current installed is NVIM v0.5.0-dev+1012-gfe1ebea33-dirty
+
+ 1rst time:
+ download last Source code (tar.gz) from https://github.com/neovim/neovim/releases into ~/Downloads
+ extract code tree to /tmp
+
+ or
+
+ cd /opt
+ mkdir neovim; sudo chown perubu:perubu neovim
+ sudo git clone https://github.com/neovim/neovim
+
+ subsequent times:
+ 
+ cd neovim
+ git pull (until "Already up to date.")
+ check if dirty
+         git status -u
+         git diff HEAD
+                if dirty:
+                git reset --hard HEAD
+                git checkout
+ 
+ git branch
+ git branch -r
+
+ follow instructions in README.md, install cmake if necessary
+ make CMAKE_BUILD_TYPE=Release
+ check ./build/bin/nvim   :version show release # is correct & clean
+ sudo make install
+ follow instruction regarding dependencies
+ 
+ ln -fs ~/Documents/Github/cheat-sheet_vim/vimrc ~/.config/nvim/init.vim
