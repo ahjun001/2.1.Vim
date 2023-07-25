@@ -4,9 +4,9 @@
 # repeat description of what the script should do
 
 set -euo pipefail
-IFS=$'\n\t'
+
 # shellcheck source=/dev/null
-. ./01_set_env_variables.sh
+. ../../2.2.Linux/1.Install/01_set_env_variables.sh
 
 # Exit if command is already installed
 if command -v nvim >>"$INSTALL_LOG"; then
@@ -19,7 +19,9 @@ fedora)
     exit 1
     ;;
 linuxmint | ubuntu)
-    sudo apt install ~/Downloads/nvim-linux64.deb
+    ! [[ -f /tmp/nvim-linux64.tar.gz ]] && wget https://github.com/neovim/neovim/releases/latest/download/nvim-linux64.tar.gz -P /tmp
+    ! [[ -d /tmp/nvim-linux64 ]] && sudo tar xvzf /tmp/nvim-linux64.tar.gz -C  /opt/
+    sudo ln -sf /opt/nvim-linux64/bin/nvim /usr/local/sbin/
     ;;
 *)
     echo "Distribution $ID not recognized, exiting ..."
