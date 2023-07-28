@@ -15,7 +15,7 @@ fi
 
 case $ID in
 fedora)
-    echo "$0 not implemented in $ID"
+    echo "\n$0 not implemented in $ID\n"
     exit 1
     ;;
 linuxmint | ubuntu)
