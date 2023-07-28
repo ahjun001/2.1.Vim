@@ -11,7 +11,7 @@ $DBG now in "$0"
 PROGRAM=vim
 if command -v "$PROGRAM" >/dev/null; then
     $DBG "$0" "$PROGRAM" is already installed
-    [[ "$0" == "${BASH_SOURCE[0]}" ]] && exit 0 && return 0
+    [[ "$0" == "${BASH_SOURCE[0]}" ]] && exit 0 || return 0
 fi
 
 case $ID in
@@ -32,4 +32,3 @@ LINKS="${0#/*}"/links_pj.sh
 [[ -f $LINKS ]] && $LINKS
 
 $RUN "$PROGRAM"
-
