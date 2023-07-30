@@ -5,12 +5,17 @@ set -euo pipefail
 # shellcheck source=/dev/null
 . ~/Documents/Github/2.1.Linux/1.Install/01_set_env_variables.sh
 
-$DBG now in "$0"
+S_name() {
+    local S_NAME="${BASH_SOURCE[0]}"
+    echo "${S_NAME#/home/perubu/Documents/Github/}"
+}
+SCRIPT_NAME=$(S_name)
+$DBG -e now in "$SCRIPT_NAME\n" "$0"
 
 # Exit if program is already installed
 PROGRAM=vim
 if command -v "$PROGRAM" >/dev/null; then
-    $DBG "$0" "$PROGRAM" is already installed
+    $DBG "$SCRIPT_NAME" "$PROGRAM" is already installed
     [[ "$0" == "${BASH_SOURCE[0]}" ]] && exit 0 || return 0
 fi
 
