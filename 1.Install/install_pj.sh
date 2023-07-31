@@ -5,12 +5,12 @@ set -euo pipefail
 # shellcheck source=/dev/null
 . ~/Documents/Github/2.1.Linux/1.Install/01_set_env_variables.sh
 
-$DBG now in "$0"
+$DBG -e '\n'"${BASH_SOURCE[0]#/home/perubu/Documents/Github/}"
 
-# Exit if program is already installed
-PROGRAM=vim
-if command -v "$PROGRAM" >/dev/null; then
-    $DBG "$0" "$PROGRAM" is already installed
+# Exit if APP is already installed
+APP=vim
+if command -v "$APP" >/dev/null; then
+    $DBG $'\t'"$APP" is already installed
     [[ "$0" == "${BASH_SOURCE[0]}" ]] && exit 0 && return 0
 fi
 
@@ -31,5 +31,5 @@ esac
 LINKS="${0#/*}"/links_pj.sh
 [[ -f $LINKS ]] && $LINKS
 
-$RUN "$PROGRAM"
+$RUN "$APP"
 
