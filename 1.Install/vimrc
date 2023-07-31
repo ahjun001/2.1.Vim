@@ -218,7 +218,7 @@ if !exists('g:vscode')
         " Quick Change Dirs --pjp
         "   if has('win32')
         "       command! CdVimbuf cd ~/Documents/vimbuf
-        "       command! CdProVim cd  /APP Files (x86)/vim
+        "       command! CdProVim cd  /Program Files (x86)/vim
         "       command! CdNotes  cd ~/Documents/1./ Perso/Notes/ -/ Synthèses/ -/ Flashcards/
         "   endif
 
