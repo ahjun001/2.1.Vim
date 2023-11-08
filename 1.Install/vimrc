@@ -168,19 +168,19 @@ if !exists('g:vscode')
         set visualbell  " Flash the screen instead of beeping on errors.
 
 
-        " set swap, backup, undo file directories & tags file --pjp
-        set tags=$VIMRUNTIME/doc/tags
-        if has('win32')
-                set directory=$HOME/vimfiles/swap//
-                set backupdir=$HOME/vimfiles/backup//
-                set undodir=$HOME/undo//
-                set viewdir=$HOME/view//
-        else
-                set directory=$HOME/.vim/swap//
-                set backupdir=$HOME/.vim/backup//
-                set undodir=$HOME/.vim/undo//
-                set viewdir=$HOME/.vim/view//
-        endif
+        @REM " set swap, backup, undo file directories & tags file --pjp
+        @REM set tags=$VIMRUNTIME/doc/tags
+        @REM if has('win32')
+        @REM         set directory=$HOME/vimfiles/swap//
+        @REM         set backupdir=$HOME/vimfiles/backup//
+        @REM         set undodir=$HOME/undo//
+        @REM         set viewdir=$HOME/view//
+        @REM else
+        @REM         set directory=$HOME/.vim/swap//
+        @REM         set backupdir=$HOME/.vim/backup//
+        @REM         set undodir=$HOME/.vim/undo//
+        @REM         set viewdir=$HOME/.vim/view//
+        @REM endif
 
 
         " automatically save and load fold views --pjp
@@ -275,5 +275,6 @@ if !exists('g:vscode')
 
 
 endif
+
 
 " vim: tw=0:fdm=expr:
