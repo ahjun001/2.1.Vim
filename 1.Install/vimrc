@@ -60,10 +60,6 @@ endif
 set foldexpr=getline(v:lnum-2)=~'^\\s*$'&&getline(v:lnum-1)=~'^\\s*$'&&getline(v:lnum)=~'\\S'?'>1':1  
 
 
-" and set default foldmethod
-set foldmethod=expr
-
-
 " get the mouse connected --pjp
 set mouse=a
 
